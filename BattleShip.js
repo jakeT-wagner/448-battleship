@@ -7,12 +7,12 @@ function isValidCode(code){
     code = code.toString();
     let inputArray = code.split("");
     let isBomb == false;
-    if num.length == 2;
+    if (num.length == 2)
     {
       let num = parseInt(inputArray[1],10);
       let less10 = (num > 0 && num < 11);
     }
-    else if num.length == 3;
+    else if (num.length == 3)
     {
       let num = parseInt(inputArray[1],10);
       let less10 = (num > 0 && num < 11);
