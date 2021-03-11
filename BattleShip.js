@@ -4,10 +4,33 @@
      * @param {string} code the input given by user
      */
 function isValidCode(code){
-    code = code.toString()
-    let num = code.split(code[0])
-    num = parseInt(num[1],10)
-    let less10 = (num > 0 && num < 11)
+    code = code.toString();
+    let inputArray = code.split("");
+    let isBomb == false;
+    if num.length == 2;
+    {
+      let num = parseInt(inputArray[1],10);
+      let less10 = (num > 0 && num < 11);
+    }
+    else if num.length == 3;
+    {
+      let num = parseInt(inputArray[1],10);
+      let less10 = (num > 0 && num < 11);
+      if(inputArray[2] == 'b' || inputArray[2] == 'B');
+      {
+        let isBomb = true;
+      }
+      else
+      {
+        return false;
+      }
+
+    }
+    else
+    {
+      return false;
+    }
+
     return ((/^[A-J]\d+$/.test(code)) && less10);
 }
 
@@ -32,12 +55,12 @@ class Gameboard {
     /**
      * @constructor
      * @description this builds each of the arrays that represent the game boards
-     * @param {number} numShips the number of ships to be played 
+     * @param {number} numShips the number of ships to be played
      */
     constructor (numShips) {
         this.m_numOfShips = numShips;
         this.m_testBoard = new Array(10);
-        
+
         for (let i = 0; i < 10; i++){
             this.m_testBoard[i] = new Array(10);
         }
@@ -56,7 +79,7 @@ class Gameboard {
      * @param {object} ship ship to be placed
      * @returns returns true if out of bounds, false otherwise
      */
-    checkOutOfBound(ship, coordinate, orientation) { 
+    checkOutOfBound(ship, coordinate, orientation) {
         coordinate = coordinate.toString();
         let coord = coordinate.split(coordinate[0]);
         let outOfBound = true
@@ -107,16 +130,16 @@ class Gameboard {
             }
           }
 
-        
+
           for (let i = 0; i < ship.getSize(); i++){
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               this.m_testBoard[colNum + i][Number(mapper[row])] = 'S';
             } else {
               this.m_testBoard[colNum][Number(mapper[row]) + i] = 'S';
             }
-            
+
           }
-          
+
         } else {
             window.alert("Invalid ship placement: Off board");
             return false;
@@ -135,14 +158,14 @@ class Gameboard {
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {   
+        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {
           this.m_testBoard[colNum][Number(mapper[row])] = 'X'
           return true
         } else {
           this.m_testBoard[colNum][Number(mapper[row])] = 'M'
           let letterASCII = coord[0].charCodeAt(0);
           let id;
-  
+
           if(player == 1) {
               id = 'c' + String.fromCharCode(letterASCII) + Number(arr[1]);
           } else {
@@ -225,12 +248,12 @@ class Ship{
 
     /*
     sink (player) {
-        let marked 
+        let marked
         let arr;
         let letterASCII;
         let id;
         for(let i = 0; i < this.m_size; i++) {
-            
+
             if(this.m_body[i] == 'X'){
                 marked = (this.m_body[i]).toString();
                 arr = marked.split(marked[0]);
@@ -314,7 +337,7 @@ class Ship{
                 }
                 document.getElementById(id.toString()).style['background-color'] = "red";
                 return true;
-                
+
             }
         }
         return false;
@@ -327,12 +350,12 @@ class Ship{
      */
     hide(player) {
         console.log("Hidden")
-        let marked 
+        let marked
         let arr;
         let letterASCII;
         let id;
         for(let i = 0; i < this.m_size; i++) {
-            
+
             if(this.m_body[i] != 'X'){
                 marked = (this.m_body[i]).toString();
                 arr = marked.split(marked[0]);
@@ -347,7 +370,7 @@ class Ship{
                 document.getElementById(id.toString()).style['background-color'] = "rgb(26,102,153)";
             }
         }
-        
+
     }
 
     /**
@@ -356,7 +379,7 @@ class Ship{
      * @param {number} player whose turn it is to determine what board to change
      */
     show(player){
-        let marked 
+        let marked
         let arr;
         let letterASCII;
         let id;
@@ -387,7 +410,7 @@ class Ship{
         coord = coord.toString()
         return this.m_body.includes(coord);
     }
-    
+
 }
 
 class Player {
@@ -402,7 +425,7 @@ class Player {
         this.m_numShips = numOfShips;
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
-  
+
     }
 
      /**
@@ -420,7 +443,7 @@ class Player {
         }
         //this.m_fleet[i].hit(coord, player);
     }
-    
+
 
     /**
      * @description takes a starting postions
@@ -453,7 +476,7 @@ class Player {
             let valid = false
             while (valid === false) {
                 let temp = new Ship(i)
- 
+
                 if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
                     temp.setPosition(cochoice, orchoice, player)
                     this.addToFleet(temp)
@@ -465,7 +488,7 @@ class Player {
                     orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
                 }
             }
- 
+
         }
 
     }
@@ -476,7 +499,7 @@ class Player {
      * @param {number} player whose not currently active player
      */
     hideShips(player) {
-        
+
         for(let i = 0; i < this.m_numShips; i++) {
             console.log("hide")
             this.m_fleet[i].hide(player);
@@ -513,11 +536,11 @@ class Player {
                     tookATurn = false
                 } else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
-                    
+
                         window.alert("\nIt was a hit!\n")
                         tookATurn = true
                         let holder = this.checkFleet(choice, player);
-                    
+
                         if(holder.isSunk()){
                             //holder.sink(player);
                             window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
@@ -534,7 +557,7 @@ class Player {
                         this.checkFleet(choice, player)
                         tookATurn = true
                     }
-                
+
                 }
             }
             else {
@@ -592,7 +615,7 @@ class Game {
 
         //This is the game. Each Player Takes turns
         let i = 1
-                
+
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.showShips(1)
         alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
@@ -613,7 +636,7 @@ class Game {
             }
             i++
         })
-      
+
     }
 }
 
@@ -626,4 +649,3 @@ window.addEventListener("load", () => {
 });
 
 //Game End Message
-
