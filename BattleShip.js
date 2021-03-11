@@ -5,33 +5,31 @@
      */
 function isValidCode(code){
     code = code.toString();
-    let inputArray = code.split("");
-    let isBomb == false;
-    if (num.length == 2)
+    let inputArray = code.split(" ");
+    let num = parseInt(inputArray[1],10);
+    let less10 = (num > 0 && num < 11);
+    console.log(inputArray[0]+" , " + inputArray[1] + " , " + inputArray[2] + " , ");
+    console.log(less10);
+    console.log((/[A-J]/.test(inputArray[1])));
+    if (inputArray.length == 2)
     {
-      let num = parseInt(inputArray[1],10);
-      let less10 = (num > 0 && num < 11);
+
     }
-    else if (num.length == 3)
+    else if (inputArray.length == 3)
     {
-      let num = parseInt(inputArray[1],10);
-      let less10 = (num > 0 && num < 11);
-      if(inputArray[2] == 'b' || inputArray[2] == 'B');
-      {
-        let isBomb = true;
-      }
-      else
+      if(inputArray[2] != 'b' && inputArray[2] != 'B')
       {
         return false;
       }
-
     }
     else
     {
       return false;
     }
 
-    return ((/^[A-J]\d+$/.test(code)) && less10);
+    //return ((/^[A-J]\d+$/.test(inputArray[1])) && less10);
+
+    return ((/[A-J]/.test(inputArray[0])) && less10);
 }
 
 /**
