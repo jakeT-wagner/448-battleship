@@ -8,9 +8,6 @@ function isValidCode(code){
     let inputArray = code.split(" ");
     let num = parseInt(inputArray[1],10);
     let less10 = (num > 0 && num < 11);
-    console.log(inputArray[0]+" , " + inputArray[1] + " , " + inputArray[2] + " , ");
-    console.log(less10);
-    console.log((/[A-J]/.test(inputArray[1])));
     if (inputArray.length == 2)
     {
 
@@ -32,6 +29,27 @@ function isValidCode(code){
     return ((/[A-J]/.test(inputArray[0])) && less10);
 }
 
+
+function isBomb(code)
+{
+  code = code.toString();
+  let inputArray = code.split(" ");
+  if (inputArray.length == 2)
+  {
+    return false;
+  }
+  else if (inputArray.length == 3)
+  {
+    if(inputArray[2] == 'b' || inputArray[2] == 'B')
+    {
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  }
+}
 /**
  *  @description mapper to handle cols
  */
@@ -421,6 +439,8 @@ class Player {
     constructor(numOfShips, name) {
         this.m_name = name;
         this.m_numShips = numOfShips;
+        this.m_numBombs = (6 / (numOfShips+(numOfShips%2)));
+        console.log("bomb amount = " + m_numBombs);
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
 
@@ -528,6 +548,21 @@ class Player {
         let tookATurn = false
         while(tookATurn == false){
             if (isValidCode(choice)){
+              if(isBomb(choice)){
+                if(player.m_numBombs > 0)
+                {
+                  console.log("bomb fired");
+                  player.m_numBombs --;
+                  //shoot a bomb if not already fired on that square
+                }
+                else{
+                  window.alert("\nERROR: Out of Bombs.\n")
+                  choice = window.prompt("What's your guess?: ")
+                  choice = choice.toUpperCase()
+                }
+                //if player has bombs left, if else alert error
+              }
+              else {
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
                     choice = window.prompt("What's your guess?: ")
                     choice = choice.toUpperCase()
@@ -557,6 +592,8 @@ class Player {
                     }
 
                 }
+              }
+
             }
             else {
                 window.alert("\nERROR: The coordinate you input was wrong. Try again!\n")
