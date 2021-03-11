@@ -396,15 +396,15 @@ class Player {
      * @description this creates each player
      * @param {number} numOfShips number of ships to played
      * @param {string} name name of the player
-     * @param {boolean} is_ai true if an ai
+     * @param {number} is_ai 0 if not an AI, 1 for easy, 2 for medium, 3 for hard
      */
     constructor(numOfShips, name, is_ai) {
         this.m_name = name;
         this.m_numShips = numOfShips;
-        this.is_ai = is_ai;
+        this.m_ai = is_ai;
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
-  
+        this.m_aiType = [this.easyAIMove(), this.mediumAIMove(), this.hardAIMove()]
     }
 
      /**
@@ -430,6 +430,39 @@ class Player {
      */
     addToFleet(ship){
         this.m_fleet[ship.getSize()-1] = ship
+    }
+
+    /**
+     * @description 
+     * @param {number} player number of player
+     */
+     AITurn(player){
+        let coord = this.m_aiType[this.m_ai]
+        this.takeATurn(player, coord)
+    }
+
+    /**
+     * @description returns easy AI moves
+     * @param None
+     */
+    easyAIMove(){
+        return "A5"
+    }
+
+    /**
+     * @description returns medium AI moves
+     * @param None
+     */
+    mediumAIMove(){
+        return "B5"
+    }
+
+    /**
+     * @description returns hard AI moves
+     * @param None
+     */
+    hardAIMove(){
+        return "C5"
     }
 
     /**
@@ -516,7 +549,7 @@ class Player {
                 } else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
                     
-                        window.alert("\nIt was a hit!\n")
+                        window.alert("\n" + this.m_name +  " got a hit!\n")
                         tookATurn = true
                         let holder = this.checkFleet(choice, player);
                     
@@ -531,7 +564,7 @@ class Player {
                             window.location.reload() //forces page to reload on win so the game ends
                         }
                     }  else{
-                        window.alert("\nYou missed!\n")
+                        window.alert("\n" + this.m_name + " missed!\n")
                         console.log("monke")
                         this.checkFleet(choice, player)
                         tookATurn = true
@@ -571,7 +604,7 @@ class Game {
     constructor() {
         let play1 = window.prompt("Player1, what is your name?: ")
         let play2 = "default"
-        let is_ai = false
+        let is_ai = 0
         let against_ai = window.prompt("Play against an AI? (Y or N)")
         
         while (1) {
@@ -588,7 +621,7 @@ class Game {
                 ai_difficulty = window.prompt("Invalid entry. Try again(1-3) ")
             }
             play2 = "Mr. Roboto"
-            is_ai = true
+            is_ai = ai_difficulty
         }
         else {
             play2 = window.prompt("Player2, what is your name?: ")
@@ -604,7 +637,7 @@ class Game {
             numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
         }
 
-        let Player1 = new Player(numShips,play1, false)
+        let Player1 = new Player(numShips,play1, 0)
         let Player2 = new Player(numShips, play2, is_ai)
 
         Player1.setBattleShips(1)
@@ -622,10 +655,12 @@ class Game {
         alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
         alert("On your turn enter shot coordinate into input box and press confirm")
         document.getElementById("confirmInput").addEventListener('click' , function() {
-            if (is_ai) {
+            if (is_ai != 0) {
+                Player1.takeATurn(1, document.querySelector("#input").value)
+                Player2.AITurn(2)
                 //player 1 takes turn, followed by automatic move by AI
             }
-            else {
+            else { 
                 if(i%2 == 1) {
                     //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                     Player1.takeATurn(1, document.querySelector('#input').value);
