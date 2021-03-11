@@ -440,7 +440,7 @@ class Player {
         this.m_name = name;
         this.m_numShips = numOfShips;
         this.m_numBombs = (6 / (numOfShips+(numOfShips%2)));
-        console.log("bomb amount = " + m_numBombs);
+        console.log("bomb amount = " + this.m_numBombs);
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
 
@@ -549,10 +549,12 @@ class Player {
         while(tookATurn == false){
             if (isValidCode(choice)){
               if(isBomb(choice)){
-                if(player.m_numBombs > 0)
+                console.log("bomb amount = " + this.m_numBombs);
+                if(this.m_numBombs > 0)
                 {
                   console.log("bomb fired");
-                  player.m_numBombs --;
+                  this.m_numBombs --;
+                  tookATurn = true;
                   //shoot a bomb if not already fired on that square
                 }
                 else{
@@ -637,8 +639,8 @@ class Game {
             numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
         }
 
-        let Player1 = new Player(numShips,play1)
-        let Player2 = new Player(numShips, play2)
+        var Player1 = new Player(numShips,play1)
+        var Player2 = new Player(numShips, play2)
 
         Player1.setBattleShips(1)
         Player1.hideShips(1);
