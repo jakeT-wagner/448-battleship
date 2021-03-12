@@ -166,7 +166,7 @@ class Gameboard {
         const colNum = Number(arr[1]) - 1;
 
         if(this.m_testBoard[colNum][Number(mapper[row])] === 'M' || this.m_testBoard[colNum][Number(mapper[row])] === 'X') {
-            window.alert("You've already shot at this location! Try again!\n");
+            //window.alert("You've already shot at this location! Try again!\n");
             return true;
         }
         return false;
@@ -417,8 +417,11 @@ class Player {
         else if (this.m_ai == 2) {
             coord = this.mediumAIMove()
         }
-        else {
+        else if (this.m_ai == 3){
             coord = this.hardAIMove()
+        }
+        else {
+            window.alert("Fatal error. You are not an AI.")
         }
         this.takeATurn(player, coord)
     }
@@ -458,7 +461,20 @@ class Player {
      * @param None
      */
     hardAIMove(){
-        return "C5"
+        let coordinate;
+        for(let i = 0; i <= 9; i++){
+            for(let j = 0; j <= 9; j++){
+                if(this.m_otherPlayerBoard.m_testBoard[j][i] == 'S'){
+                    coordinate = String.fromCharCode(65 + i) + (j+1).toString()
+                    //if this location hasn't been hit
+                    console.log(coordinate)
+                    if (!this.m_otherPlayerBoard.isAlreadyShot(coordinate)) {
+                        return coordinate
+                    }
+                    
+                }
+            }
+        }
     }
 
     /**
