@@ -4,13 +4,31 @@
      * @param {string} code the input given by user
      */
 function isValidCode(code){
-    code = code.toString()
-    let num = code.split(code[0])
-    num = parseInt(num[1],10)
-    let less10 = (num > 0 && num < 11)
-    return ((/^[A-J]\d+$/.test(code)) && less10);
+  code = code.toString();
+  if(code.slice(-1) == "b" || code.slice(-1) == "B")
+  {
+    code = code.substring(0, code.length-1);
+  }
+
+
+  let num = code.split(code[0])
+  num = parseInt(num[1],10)
+  let less10 = (num > 0 && num < 11)
+  return ((/^[A-J]\d+$/.test(code)) && less10);
 }
 
+
+function isBomb(code)
+{
+  code = code.toString();
+  if(code.slice(-1) == "b" || code.slice(-1) == "B")
+  {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
 /**
  *  @description mapper to handle cols
  */
@@ -32,12 +50,12 @@ class Gameboard {
     /**
      * @constructor
      * @description this builds each of the arrays that represent the game boards
-     * @param {number} numShips the number of ships to be played 
+     * @param {number} numShips the number of ships to be played
      */
     constructor (numShips) {
         this.m_numOfShips = numShips;
         this.m_testBoard = new Array(10);
-        
+
         for (let i = 0; i < 10; i++){
             this.m_testBoard[i] = new Array(10);
         }
@@ -56,8 +74,12 @@ class Gameboard {
      * @param {object} ship ship to be placed
      * @returns returns true if out of bounds, false otherwise
      */
-    checkOutOfBound(ship, coordinate, orientation) { 
+    checkOutOfBound(ship, coordinate, orientation) {
         coordinate = coordinate.toString();
+        if(coordinate.slice(-1) == "b" || coordinate.slice(-1) == "B")
+        {
+          coordinate = coordinate.substring(0, coordinate.length-1);
+        }
         let coord = coordinate.split(coordinate[0]);
         let outOfBound = true
         let letterASCII = coordinate[0].charCodeAt(0)
@@ -88,6 +110,10 @@ class Gameboard {
      */
     placeShip(ship, coord, orientation) {
         coord = coord.toString()
+        if(coord.slice(-1) == "b" || coord.slice(-1) == "B")
+        {
+          coord = coord.substring(0, coord.length-1);
+        }
         let arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
@@ -107,16 +133,16 @@ class Gameboard {
             }
           }
 
-        
+
           for (let i = 0; i < ship.getSize(); i++){
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
               this.m_testBoard[colNum + i][Number(mapper[row])] = 'S';
             } else {
               this.m_testBoard[colNum][Number(mapper[row]) + i] = 'S';
             }
-            
+
           }
-          
+
         } else {
             window.alert("Invalid ship placement: Off board");
             return false;
@@ -131,18 +157,22 @@ class Gameboard {
      */
     isAHit(coord, player) {
         coord = coord.toString();
+        if(coord.slice(-1) == "b" || coord.slice(-1) == "B")
+        {
+          coord = coord.substring(0, coord.length-1);
+        }
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {   
+        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S' || this.m_testBoard[colNum][Number(mapper[row])] == 'X') {
           this.m_testBoard[colNum][Number(mapper[row])] = 'X'
           return true
         } else {
           this.m_testBoard[colNum][Number(mapper[row])] = 'M'
           let letterASCII = coord[0].charCodeAt(0);
           let id;
-  
+
           if(player == 1) {
               id = 'c' + String.fromCharCode(letterASCII) + Number(arr[1]);
           } else {
@@ -161,6 +191,10 @@ class Gameboard {
      */
     isAlreadyShot(coord) {
         coord = coord.toString();
+        if(coord.slice(-1) == "b" || coord.slice(-1) == "B")
+        {
+          coord = coord.substring(0, coord.length-1);
+        }
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
@@ -230,6 +264,10 @@ class Ship{
      */
     setPosition(startPos, orientation, turn) {
         startPos = startPos.toString()
+        if(startPos.slice(-1) == "b" || startPos.slice(-1) == "B")
+        {
+          startPos = startPos.substring(0, startPos.length-1);
+        }
         orientation = orientation.toString()
         let arr = startPos.split(startPos[0]);
         let letterASCII = startPos[0].charCodeAt(0);
@@ -270,6 +308,10 @@ class Ship{
      */
     hit(marked, player) {
         marked = marked.toString()
+        if(marked.slice(-1) == "b" || marked.slice(-1) == "B")
+        {
+          marked = marked.substring(0, marked.length-1);
+        }
         let arr = marked.split(marked[0]);
         let letterASCII = marked[0].charCodeAt(0);
         let id;
@@ -288,7 +330,7 @@ class Ship{
                 }
                 document.getElementById(id.toString()).style['background-color'] = "red";
                 return true;
-                
+
             }
         }
         return false;
@@ -301,12 +343,12 @@ class Ship{
      */
     hide(player) {
         console.log("Hidden")
-        let marked 
+        let marked
         let arr;
         let letterASCII;
         let id;
         for(let i = 0; i < this.m_size; i++) {
-            
+
             if(this.m_body[i] != 'X'){
                 marked = (this.m_body[i]).toString();
                 arr = marked.split(marked[0]);
@@ -321,7 +363,7 @@ class Ship{
                 document.getElementById(id.toString()).style['background-color'] = "rgb(26,102,153)";
             }
         }
-        
+
     }
 
     /**
@@ -330,7 +372,7 @@ class Ship{
      * @param {number} player whose turn it is to determine what board to change
      */
     show(player){
-        let marked 
+        let marked
         let arr;
         let letterASCII;
         let id;
@@ -361,7 +403,7 @@ class Ship{
         coord = coord.toString()
         return this.m_body.includes(coord);
     }
-    
+
 }
 
 class Player {
@@ -376,6 +418,8 @@ class Player {
         this.m_name = name;
         this.m_numShips = numOfShips;
         this.m_ai = is_ai;
+        this.m_numBombs = Math.ceil((6 / (numOfShips+(numOfShips%2))))
+        console.log("bomb amount = " + this.m_numBombs);
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
     }
@@ -395,7 +439,7 @@ class Player {
         }
         //this.m_fleet[i].hit(coord, player);
     }
-    
+
 
     /**
      * @description takes a starting postions
@@ -559,7 +603,7 @@ class Player {
      * @param {number} player whose not currently active player
      */
     hideShips(player) {
-        
+
         for(let i = 0; i < this.m_numShips; i++) {
             console.log("hide")
             this.m_fleet[i].hide(player);
@@ -585,22 +629,92 @@ class Player {
      */
     takeATurn(player, choice) {
         //The prompting for a choice will change depending on how we decide to do it
-        console.log(choice)
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
             if (isValidCode(choice)){
+              if(isBomb(choice)){
+                console.log("bomb amount = " + this.m_numBombs);
+                if(this.m_numBombs > 0)
+                {
+                  choice = choice.toString();
+                  choice = choice.substring(0, choice.length-1);
+                  //let newchoice = choice.slice(0,-1);
+                  if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
+                      choice = window.prompt("What's your guess?: ")
+                      choice = choice.toUpperCase()
+                      tookATurn = false
+                  }
+                  else {
+                    let bombhit = false;
+
+                    let choiceArray = [choice.split("",1),choice.substring(1, 3)];
+
+                    for (let i = -1; i<2; i++)
+                    {
+                      for(let j = -1; j<2; j++)
+                      {
+                        let modifiedChoice = [String.fromCharCode(mapper[choiceArray[0]]+97+i).toUpperCase(),parseInt(choiceArray[1],10)+j]
+                        console.log(parseInt(mapper[choiceArray[0]],10)+i + ", " + modifiedChoice[1]);
+                        if (parseInt(mapper[choiceArray[0]],10)+i >= 0 && parseInt(mapper[choiceArray[0]],10)+i < 10 && modifiedChoice[1] > 0 && parseInt(choiceArray[1],10)+j <= 10)
+                        {
+                          if (this.m_otherPlayerBoard.isAHit(modifiedChoice.join(''), player))
+                          {
+                            bombhit = true;
+                            let holder = this.checkFleet(modifiedChoice.join(''), player);
+
+                            if(holder.isSunk()){
+                                //holder.sink(player);
+                                window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                            }
+
+                          }
+                        }
+                      }
+                    }
+                      if (bombhit == true){
+
+                          window.alert("\nIt was a hit!\n")
+                          tookATurn = true
+
+                          if (this.m_otherPlayerBoard.checkIfAllHit()){
+                              window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won! Reload to play again!\n")
+                              //object.reload(forcedReload)
+                              window.location.reload() //forces page to reload on win so the game ends
+                          }
+                      }  else{
+                          window.alert("\nYou missed!\n")
+                          console.log("monke")
+                          this.checkFleet(choice, player)
+                          tookATurn = true
+                      }
+                      console.log("bomb fired");
+                      this.m_numBombs --;
+                      tookATurn = true;
+
+                  }
+                  //shoot a bomb if not already fired on that square
+                }
+                else{
+                  window.alert("\nERROR: Out of Bombs.\n")
+                  choice = window.prompt("What's your guess?: ")
+                  choice = choice.toUpperCase()
+                }
+                //if player has bombs left, if else alert error
+              }
+              else {
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
                     choice = window.prompt("What's your guess?: ")
                     choice = choice.toUpperCase()
                     tookATurn = false
-                } else {
+                }
+                else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
                     
                         window.alert("\n" + this.m_name +  " got a hit!\n")
                         tookATurn = true
                         let holder = this.checkFleet(choice, player);
-                    
+
                         if(holder.isSunk()){
                             //holder.sink(player);
                             window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
@@ -616,8 +730,10 @@ class Player {
                         this.checkFleet(choice, player)
                         tookATurn = true
                     }
-                
+
                 }
+              }
+
             }
             else {
                 window.alert("\nERROR: The coordinate you input was wrong. Try again!\n")
@@ -689,12 +805,13 @@ class Game {
         Player1.hideShips(1);
         Player2.setBattleShips(2, 0, play1)
         Player2.hideShips(2);
+        document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
         //window.alert(Player1.m_otherPlayerBoard);
         //window.alert(Player2.m_otherPlayerBoard);
 
         //This is the game. Each Player Takes turns
         let i = 1
-                
+
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.showShips(1)
         alert("\nIt is " + Player1.m_name + "'s turn!")
@@ -703,25 +820,30 @@ class Game {
             if (is_ai != 0) {
                 Player1.takeATurn(1, document.querySelector("#input").value)
                 Player2.AITurn(2)
+                document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
                 //player 1 takes turn, followed by automatic move by AI
             }
             else { 
                 if(i%2 == 1) {
+                    //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                    console.log("input = " + document.querySelector('#input').value)
                     Player1.takeATurn(1, document.querySelector('#input').value);
-                    alert("\nIt is " + Player2.m_name + "'s turn!")
+                    alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.hideShips(2)
-                    Player1.showShips(2) 
+                    Player1.showShips(2)
+                    document.getElementById("bombtext").innerHTML = "You have "+ Player2.m_numBombs +" bomb(s) remaining";
                 } else {
+                    //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.takeATurn(2, document.querySelector('#input').value)
-                    alert("\nIt is " + Player1.m_name + "'s turn!")
+                    alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                     Player1.hideShips(1)
                     Player2.showShips(1)
+                    document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
                 }
                 i++
             }
-
         })
-      
+
     }
 }
 
@@ -736,4 +858,3 @@ window.addEventListener("load", () => {
 
 
 //Game End Message
-
