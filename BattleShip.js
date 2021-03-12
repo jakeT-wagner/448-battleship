@@ -223,32 +223,6 @@ class Ship{
         return this.m_health === 0;
     }
 
-    /*
-    sink (player) {
-        let marked 
-        let arr;
-        let letterASCII;
-        let id;
-        for(let i = 0; i < this.m_size; i++) {
-            
-            if(this.m_body[i] == 'X'){
-                marked = (this.m_body[i]).toString();
-                arr = marked.split(marked[0]);
-                letterASCII = marked[0].charCodeAt(0);
-                if(player == 1) {
-                    //window.alert("here C")
-                    id = 'c' + String.fromCharCode(letterASCII) + (Number(arr[1]));
-                } else {
-                    //window.alert("here")
-                    id = 'o' + String.fromCharCode(letterASCII) + (Number(arr[1]));
-                }
-                document.getElementById(id.toString()).style['background-color'] = "rgb(85, 86, 86)";
-            }
-        }
-
-    }
-    */
-
     /**
      * @description places the coordinates in the ship body starting at the initial coordinate, also adds css styling for ship on board
      * @returns none
@@ -447,6 +421,8 @@ class Player {
      */
     easyAIMove(){
         return "A5"
+        //randomly use a bomb
+        //check if the space has been hit
     }
 
     /**
@@ -469,39 +445,74 @@ class Player {
      * @description allows other player to place ships, I.E. player1's board is in player2's class, this is where ships are created, also adds to fleet array
      * @returns true if ship placed
      * @param {number} player either a 1 or a 2 to denote active player, this is just being passed through
+     * @param {number} is_ai will be 0 for non-ai and 1,2, or 3 for AI
      * */
-    setBattleShips(player) {
-        window.alert("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
-        for (let i = 1; i <= this.m_numShips; i++) {
-            //The prompting for a choice will change depending on how we decide to do it
-            let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
-            cochoice = cochoice.toUpperCase()
-            while (!isValidCode(cochoice)){
-                cochoice = window.prompt("\nYour coordinate is invalid. Try again: ")
-                cochoice = cochoice.toUpperCase()
-            }
-            let orchoice = window.prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
-            while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
-                orchoice = window.prompt("\nYour choice of orientation was invalid. Try again: ")
-            }
+    setBattleShips(player, is_ai) {
+        if (is_ai != 0) {
+            //randomly places ships for the AI
+            for (let i = 1; i <= this.m_numShips; i ++) {
+                
+                let valid = false
+                while (valid === false) {
+                    
+                    //creates a Ship object, when placing the object, verification is done to see if it can be placed
+                    let temp = new Ship(i)
 
-            let valid = false
-            while (valid === false) {
-                let temp = new Ship(i)
- 
-                if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
-                    temp.setPosition(cochoice, orchoice, player)
-                    this.addToFleet(temp)
-                    valid = true
-                }
-                else{
-                    cochoice = window.prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
-                    cochoice = cochoice.toUpperCase();
-                    orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
+                    //randomly picks a coordinate
+                    let col = 65 + Math.floor(Math.random() * 10)
+                    let coordinate = String.fromCharCode(col) //https://stackoverflow.com/questions/94037/convert-character-to-ascii-code-in-javascript
+                    coordinate = coordinate + (Math.floor(Math.random() * 10)).toString()
+
+                    //gives a ship a randomized orientation
+                    let orientation = 'H'
+                    if (Math.random() <= 0.5) {
+                        orientation = 'V'
+                    }
+
+                    //checks if the random selection is able to be placed or not
+                    if (isValidCode(coordinate) && this.m_otherPlayerBoard.placeShip(temp, coordinate, orientation)){
+                        temp.setPosition(coordinate, orientation, player) //issue is here
+                        this.addToFleet(temp)
+                        valid = true
+                    }
                 }
             }
- 
+            window.alert("The AI picked their ships!")
         }
+        else {
+            //gets user input for where to place ships
+            window.alert("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
+            for (let i = 1; i <= this.m_numShips; i++) {
+                //The prompting for a choice will change depending on how we decide to do it
+                let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
+                cochoice = cochoice.toUpperCase()
+                while (!isValidCode(cochoice)){
+                    cochoice = window.prompt("\nYour coordinate is invalid. Try again: ")
+                    cochoice = cochoice.toUpperCase()
+                }
+                let orchoice = window.prompt("\nWhat orientation ('V' for vertical(Vertical upwards) 'H' for horizontal) would you like for this ship: ") //asks for orientation
+                while ((orchoice != 'H' && orchoice != 'h') && (orchoice != 'V' && orchoice != 'v')){
+                    orchoice = window.prompt("\nYour choice of orientation was invalid. Try again: ")
+                }
+
+                let valid = false
+                while (valid === false) {
+                    let temp = new Ship(i)
+    
+                    if (isValidCode(cochoice) && this.m_otherPlayerBoard.placeShip(temp, cochoice, orchoice)){
+                        temp.setPosition(cochoice, orchoice, player)
+                        this.addToFleet(temp)
+                        valid = true
+                    }
+                    else{
+                        cochoice = window.prompt("\nTry Again! For ship #" + i + ", what coordinate would you like it to start: ")
+                        cochoice = cochoice.toUpperCase();
+                        orchoice = window.prompt("\nWhat orientation('V' for vertical 'H' for horizontal) would you like for this ship: ")
+                    }
+                }
+    
+            }
+        }   
 
     }
 
@@ -565,7 +576,6 @@ class Player {
                         }
                     }  else{
                         window.alert("\n" + this.m_name + " missed!\n")
-                        console.log("monke")
                         this.checkFleet(choice, player)
                         tookATurn = true
                     }
@@ -640,9 +650,9 @@ class Game {
         let Player1 = new Player(numShips,play1, 0)
         let Player2 = new Player(numShips, play2, is_ai)
 
-        Player1.setBattleShips(1)
+        Player1.setBattleShips(1, is_ai)
         Player1.hideShips(1);
-        Player2.setBattleShips(2)
+        Player2.setBattleShips(2, 0)
         Player2.hideShips(2);
         //window.alert(Player1.m_otherPlayerBoard);
         //window.alert(Player2.m_otherPlayerBoard);
@@ -666,7 +676,7 @@ class Game {
                     Player1.takeATurn(1, document.querySelector('#input').value);
                     alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.hideShips(2)
-                    Player1.showShips(2)
+                    Player1.showShips(2) 
                 } else {
                     //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.takeATurn(2, document.querySelector('#input').value)
