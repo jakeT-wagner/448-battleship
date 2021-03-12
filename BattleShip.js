@@ -634,7 +634,7 @@ class Player {
     hasWon() {
         return (this.m_otherPlayerBoard.checkIfAllHit())
     }
-
+}
 
 //Let's start the game from here
 
