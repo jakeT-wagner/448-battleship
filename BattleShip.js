@@ -378,7 +378,6 @@ class Player {
         this.m_ai = is_ai;
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
-        this.m_aiType = [this.easyAIMove(), this.mediumAIMove(), this.hardAIMove()]
     }
 
      /**
@@ -411,7 +410,16 @@ class Player {
      * @param {number} player number of player
      */
      AITurn(player){
-        let coord = this.m_aiType[this.m_ai]
+        let coord;
+        if (this.m_ai == 1) {
+            coord = this.easyAIMove()
+        }
+        else if (this.m_ai == 2) {
+            coord = this.mediumAIMove()
+        }
+        else {
+            coord = this.hardAIMove()
+        }
         this.takeATurn(player, coord)
     }
 
@@ -420,9 +428,21 @@ class Player {
      * @param None
      */
     easyAIMove(){
-        return "A5"
-        //randomly use a bomb
-        //check if the space has been hit
+        //will randomly shoot, verifying if that spot has not been hit before
+        let shotTaken = false;
+        let row;
+        let col;
+        while(shotTaken == false){
+            //gives a random coordinate for the ship to shoot at
+            row = Math.floor(Math.random() * 10);
+            col = 65 + Math.floor(Math.random() * 10);
+            let coordinate = String.fromCharCode(col)
+            coordinate = coordinate + row.toString()
+            console.log(coordinate)
+            if(!this.m_otherPlayerBoard.isAlreadyShot(coordinate)){
+                return coordinate
+            }
+        }    
     }
 
     /**
@@ -446,8 +466,9 @@ class Player {
      * @returns true if ship placed
      * @param {number} player either a 1 or a 2 to denote active player, this is just being passed through
      * @param {number} is_ai will be 0 for non-ai and 1,2, or 3 for AI
+     * @param {string} otherPlayerName will contain the name of the user picking their ships
      * */
-    setBattleShips(player, is_ai) {
+    setBattleShips(player, is_ai, otherPlayerName) {
         if (is_ai != 0) {
             //randomly places ships for the AI
             for (let i = 1; i <= this.m_numShips; i ++) {
@@ -481,7 +502,7 @@ class Player {
         }
         else {
             //gets user input for where to place ships
-            window.alert("Welcome " + this.m_name + "! Let's have the other player set up their battleship!\n")
+            window.alert("Welcome " + otherPlayerName + "! Pick your ships!\n")
             for (let i = 1; i <= this.m_numShips; i++) {
                 //The prompting for a choice will change depending on how we decide to do it
                 let cochoice = window.prompt("For ship #" + i + ", what coordinate would you like it to start: ") //asks for coordinates
@@ -630,7 +651,7 @@ class Game {
             while(ai_difficulty < 1 || ai_difficulty > 3) {
                 ai_difficulty = window.prompt("Invalid entry. Try again(1-3) ")
             }
-            play2 = "Mr. Roboto"
+            play2 = "The AI"
             is_ai = ai_difficulty
         }
         else {
@@ -650,9 +671,9 @@ class Game {
         let Player1 = new Player(numShips,play1, 0)
         let Player2 = new Player(numShips, play2, is_ai)
 
-        Player1.setBattleShips(1, is_ai)
+        Player1.setBattleShips(1, is_ai, play2)
         Player1.hideShips(1);
-        Player2.setBattleShips(2, 0)
+        Player2.setBattleShips(2, 0, play1)
         Player2.hideShips(2);
         //window.alert(Player1.m_otherPlayerBoard);
         //window.alert(Player2.m_otherPlayerBoard);
@@ -662,7 +683,7 @@ class Game {
                 
         //Are we showing Player1's board here so they can see where they've been hit?
         Player2.showShips(1)
-        alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+        alert("\nIt is " + Player1.m_name + "'s turn!")
         alert("On your turn enter shot coordinate into input box and press confirm")
         document.getElementById("confirmInput").addEventListener('click' , function() {
             if (is_ai != 0) {
@@ -672,15 +693,13 @@ class Game {
             }
             else { 
                 if(i%2 == 1) {
-                    //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                     Player1.takeATurn(1, document.querySelector('#input').value);
-                    alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+                    alert("\nIt is " + Player2.m_name + "'s turn!")
                     Player2.hideShips(2)
                     Player1.showShips(2) 
                 } else {
-                    //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.takeATurn(2, document.querySelector('#input').value)
-                    alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                    alert("\nIt is " + Player1.m_name + "'s turn!")
                     Player1.hideShips(1)
                     Player2.showShips(1)
                 }
