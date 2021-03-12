@@ -48,7 +48,7 @@ class Gameboard {
             }
         }
 
-        window.alert(this.m_testBoard); //for testing
+        //window.alert(this.m_testBoard); //for testing
     }
 
     /**
@@ -546,11 +546,171 @@ class Player {
     }
 
     /**
-     * @description calls the checkIfAllHit in the gameBaord class
+     * @description calls the checkIfAllHit in the gameBoard class
      * @returns true if all other player's ships have been sunk
      */
     hasWon() {
         return (this.m_otherPlayerBoard.checkIfAllHit())
+    }
+
+    easyAIShot(player){///////////////////////////////////////////////////////////////////////////////////////////////
+        var shot;
+        var rowString;
+        let shotRow = Math.floor(Math.random() * 10);
+        let shotCol = Math.floor(Math.random() * 10);
+        let shotTaken = false;
+        switch(shotRow){
+            case 0:
+                rowString = "1";
+                break;
+            case 1:
+                rowString = "2";
+                break;
+            case 2:
+                rowString = "3";
+                break;
+            case 3:
+                rowString = "4";
+                break;
+            case 4:
+                rowString = "5";
+                break;
+            case 5:
+                rowString = "6";
+                break;
+            case 6:
+                rowString = "7";
+                break;
+            case 7:
+                rowString = "8";
+                break;
+            case 8:
+                rowString = "9";
+                break;
+            case 9:
+                rowString = "10";
+                break; 
+        }
+        switch(shotCol){
+            case 0:
+                shot = "A";
+                break;
+            case 1:
+                shot = "B";
+                break;
+            case 2:
+                shot = "C";
+                break;
+            case 3:
+                shot = "D";
+                break;
+            case 4:
+                shot = "E";
+                break;
+            case 5:
+                shot = "F";
+                break;
+            case 6:
+                shot = "G";
+                break;
+            case 7:
+                shot = "H";
+                break;
+            case 8:
+                shot = "I";
+                break;
+            case 9:
+                shot = "J";
+                break; 
+        }
+        shot += rowString;
+        while(shotTaken == false){
+            if(this.m_otherPlayerBoard.isAlreadyShot(shot)){
+                shotCol = Math.floor(Math.random() * 10);
+                switch(shotCol){
+                    case 0:
+                        shot = "A";
+                        break;
+                    case 1:
+                        shot = "B";
+                        break;
+                    case 2:
+                        shot = "C";
+                        break;
+                    case 3:
+                        shot = "D";
+                        break;
+                    case 4:
+                        shot = "E";
+                        break;
+                    case 5:
+                        shot = "F";
+                        break;
+                    case 6:
+                        shot = "G";
+                        break;
+                    case 7:
+                        shot = "H";
+                        break;
+                    case 8:
+                        shot = "I";
+                        break;
+                    case 9:
+                        shot = "J";
+                        break; 
+                }
+                shot += rowString;
+                shotTaken = false;
+            }
+            else{
+                return shot;
+            }
+        }    
+    }
+
+    hardAIShot(player){///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        var shot;
+        let verified = false;
+        for(let i = 0; i <= 9; i++){
+            for(let j = 0; j <= 9; j++){
+                if(this.m_otherPlayerBoard.m_testBoard[j][i] == 'S'){
+                    switch(j){
+                        case 0:
+                        shot = "A";
+                        break;
+                    case 1:
+                        shot = "B";
+                        break;
+                    case 2:
+                        shot = "C";
+                        break;
+                    case 3:
+                        shot = "D";
+                        break;
+                    case 4:
+                        shot = "E";
+                        break;
+                    case 5:
+                        shot = "F";
+                        break;
+                    case 6:
+                        shot = "G";
+                        break;
+                    case 7:
+                        shot = "H";
+                        break;
+                    case 8:
+                        shot = "I";
+                        break;
+                    case 9:
+                        shot = "J";
+                        break; 
+                    }
+                    shot += String(i + 1);
+                    return shot;
+                }
+            }
+        }
     }
 }
 
@@ -606,7 +766,9 @@ class Game {
                 Player1.showShips(2)
             } else {
                 //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
-                Player2.takeATurn(2, document.querySelector('#input').value)
+                //Player2.takeATurn(2, document.querySelector('#input').value)
+                var test = Player2.hardAIShot(2);////////////////////////////////////////////////////////////////////////////////CHANGED THIS
+                console.log(test);///////////////////////////////////////////////////////////////////////////////////////////////
                 alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                 Player1.hideShips(1)
                 Player2.showShips(1)
