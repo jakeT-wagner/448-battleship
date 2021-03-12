@@ -4,49 +4,29 @@
      * @param {string} code the input given by user
      */
 function isValidCode(code){
-    code = code.toString();
-    let inputArray = code.split("");
-    let num = parseInt(inputArray[1],10);
-    let less10 = (num > 0 && num < 11);
-    if (inputArray.length == 2)
-    {
-    }
-    else if (inputArray.length == 3)
-    {
-      if(inputArray[2] != 'b' && inputArray[2] != 'B')
-      {
-        return false;
-      }
-    }
-    else
-    {
-      return false;
-    }
+  code = code.toString();
+  if(code.slice(-1) == "b" || code.slice(-1) == "B")
+  {
+    code = code.substring(0, code.length-1);
+  }
 
-    //return ((/^[A-J]\d+$/.test(inputArray[1])) && less10);
 
-    return ((/[A-J]/.test(inputArray[0])) && less10);
+  let num = code.split(code[0])
+  num = parseInt(num[1],10)
+  let less10 = (num > 0 && num < 11)
+  return ((/^[A-J]\d+$/.test(code)) && less10);
 }
 
 
 function isBomb(code)
 {
   code = code.toString();
-  let inputArray = code.split("");
-  if (inputArray.length == 2)
+  if(code.slice(-1) == "b" || code.slice(-1) == "B")
   {
-    return false;
+    return true;
   }
-  else if (inputArray.length == 3)
-  {
-    if(inputArray[2] == 'b' || inputArray[2] == 'B')
-    {
-      return true;
-    }
-    else {
-      return false;
-    }
-
+  else {
+    return false;
   }
 }
 /**
@@ -96,6 +76,10 @@ class Gameboard {
      */
     checkOutOfBound(ship, coordinate, orientation) {
         coordinate = coordinate.toString();
+        if(coordinate.slice(-1) == "b" || coordinate.slice(-1) == "B")
+        {
+          coordinate = coordinate.substring(0, coordinate.length-1);
+        }
         let coord = coordinate.split(coordinate[0]);
         let outOfBound = true
         let letterASCII = coordinate[0].charCodeAt(0)
@@ -126,6 +110,10 @@ class Gameboard {
      */
     placeShip(ship, coord, orientation) {
         coord = coord.toString()
+        if(coord.slice(-1) == "b" || coord.slice(-1) == "B")
+        {
+          coord = coord.substring(0, coord.length-1);
+        }
         let arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
@@ -169,6 +157,10 @@ class Gameboard {
      */
     isAHit(coord, player) {
         coord = coord.toString();
+        if(coord.slice(-1) == "b" || coord.slice(-1) == "B")
+        {
+          coord = coord.substring(0, coord.length-1);
+        }
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
@@ -199,6 +191,10 @@ class Gameboard {
      */
     isAlreadyShot(coord) {
         coord = coord.toString();
+        if(coord.slice(-1) == "b" || coord.slice(-1) == "B")
+        {
+          coord = coord.substring(0, coord.length-1);
+        }
         const arr = coord.split(coord[0]) //no spaces needed for coordinate
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
@@ -294,6 +290,10 @@ class Ship{
      */
     setPosition(startPos, orientation, turn) {
         startPos = startPos.toString()
+        if(startPos.slice(-1) == "b" || startPos.slice(-1) == "B")
+        {
+          startPos = startPos.substring(0, startPos.length-1);
+        }
         orientation = orientation.toString()
         let arr = startPos.split(startPos[0]);
         let letterASCII = startPos[0].charCodeAt(0);
@@ -334,6 +334,10 @@ class Ship{
      */
     hit(marked, player) {
         marked = marked.toString()
+        if(marked.slice(-1) == "b" || marked.slice(-1) == "B")
+        {
+          marked = marked.substring(0, marked.length-1);
+        }
         let arr = marked.split(marked[0]);
         let letterASCII = marked[0].charCodeAt(0);
         let id;
@@ -542,7 +546,6 @@ class Player {
      */
     takeATurn(player, choice) {
         //The prompting for a choice will change depending on how we decide to do it
-        console.log(choice)
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
@@ -552,8 +555,9 @@ class Player {
                 if(this.m_numBombs > 0)
                 {
                   choice = choice.toString();
-                  let newchoice = choice.slice(0,-1);
-                  if (this.m_otherPlayerBoard.isAlreadyShot(newchoice)) {
+                  choice = choice.substring(0, choice.length-1);
+                  //let newchoice = choice.slice(0,-1);
+                  if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
                       choice = window.prompt("What's your guess?: ")
                       choice = choice.toUpperCase()
                       tookATurn = false
@@ -561,8 +565,7 @@ class Player {
                   else {
                     let bombhit = false;
 
-
-                    let choiceArray = newchoice.split("")
+                    let choiceArray = [choice.split("",1),choice.substring(1, 3)];
 
                     for (let i = -1; i<2; i++)
                     {
@@ -713,6 +716,7 @@ class Game {
         document.getElementById("confirmInput").addEventListener('click' , function() {
             if(i%2 == 1) {
                 //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                console.log("input = " + document.querySelector('#input').value)
                 Player1.takeATurn(1, document.querySelector('#input').value);
                 alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                 Player2.hideShips(2)
