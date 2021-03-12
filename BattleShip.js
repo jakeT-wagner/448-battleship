@@ -5,12 +5,11 @@
      */
 function isValidCode(code){
     code = code.toString();
-    let inputArray = code.split(" ");
+    let inputArray = code.split("");
     let num = parseInt(inputArray[1],10);
     let less10 = (num > 0 && num < 11);
     if (inputArray.length == 2)
     {
-
     }
     else if (inputArray.length == 3)
     {
@@ -33,7 +32,7 @@ function isValidCode(code){
 function isBomb(code)
 {
   code = code.toString();
-  let inputArray = code.split(" ");
+  let inputArray = code.split("");
   if (inputArray.length == 2)
   {
     return false;
@@ -174,7 +173,7 @@ class Gameboard {
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S') {
+        if (this.m_testBoard[colNum][Number(mapper[row])] == 'S' || this.m_testBoard[colNum][Number(mapper[row])] == 'X') {
           this.m_testBoard[colNum][Number(mapper[row])] = 'X'
           return true
         } else {
@@ -204,7 +203,7 @@ class Gameboard {
         const row = coord[0];
         const colNum = Number(arr[1]) - 1;
 
-        if(this.m_testBoard[colNum][Number(mapper[row])] === 'M' || this.m_testBoard[colNum][Number(mapper[row])] === 'X') {
+        if(this.m_testBoard[colNum][Number(mapper[row])] === 'M' || this.m_testBoard[colNum][Number(mapper[row])] == 'X') {
             window.alert("You've already shot at this location! Try again!\n");
             return true;
         }
@@ -552,6 +551,57 @@ class Player {
                 console.log("bomb amount = " + this.m_numBombs);
                 if(this.m_numBombs > 0)
                 {
+                  choice = choice.toString();
+                  let newchoice = choice.slice(0,-1);
+                  if (this.m_otherPlayerBoard.isAlreadyShot(newchoice)) {
+                      choice = window.prompt("What's your guess?: ")
+                      choice = choice.toUpperCase()
+                      tookATurn = false
+                  }
+                  else {
+                    let bombhit = false;
+
+
+                    let choiceArray = newchoice.split("")
+
+                    for (let i = -1; i<2; i++)
+                    {
+                      for(let j = -1; j<2; j++)
+                      {
+                        console.log(choiceArray[0]);
+                        console.log(mapper[choiceArray[0]]);
+                        console.log(String.fromCharCode(mapper[choiceArray[0]]+97+i).toUpperCase() + " , " + parseInt(choiceArray[1],10)+j);
+                        let modifiedChoice = [String.fromCharCode(mapper[choiceArray[0]]+97+i).toUpperCase(),parseInt(choiceArray[1],10)+j]
+                        if (this.m_otherPlayerBoard.isAHit(modifiedChoice.join(''), player))
+                        {
+                          bombhit = true;
+                        }
+                      }
+                    }
+                      if (bombhit == true){
+
+                          window.alert("\nIt was a hit!\n")
+                          tookATurn = true
+                          let holder = this.checkFleet(choice, player);
+
+                          if(holder.isSunk()){
+                              //holder.sink(player);
+                              window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                          }
+
+                          if (this.m_otherPlayerBoard.checkIfAllHit()){
+                              window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won! Reload to play again!\n")
+                              //object.reload(forcedReload)
+                              window.location.reload() //forces page to reload on win so the game ends
+                          }
+                      }  else{
+                          window.alert("\nYou missed!\n")
+                          console.log("monke")
+                          this.checkFleet(choice, player)
+                          tookATurn = true
+                      }
+
+                  }
                   console.log("bomb fired");
                   this.m_numBombs --;
                   tookATurn = true;
@@ -569,7 +619,8 @@ class Player {
                     choice = window.prompt("What's your guess?: ")
                     choice = choice.toUpperCase()
                     tookATurn = false
-                } else {
+                }
+                else {
                     if (this.m_otherPlayerBoard.isAHit(choice, player)){
 
                         window.alert("\nIt was a hit!\n")
@@ -639,8 +690,8 @@ class Game {
             numShips = window.prompt('\nYou gave an invalid amount of ships. Try again: ')
         }
 
-        var Player1 = new Player(numShips,play1)
-        var Player2 = new Player(numShips, play2)
+        let Player1 = new Player(numShips,play1)
+        let Player2 = new Player(numShips, play2)
 
         Player1.setBattleShips(1)
         Player1.hideShips(1);
