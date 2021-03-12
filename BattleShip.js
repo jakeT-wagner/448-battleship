@@ -699,7 +699,7 @@ class Game {
         Player1.hideShips(1);
         Player2.setBattleShips(2)
         Player2.hideShips(2);
-
+        document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
         //window.alert(Player1.m_otherPlayerBoard);
         //window.alert(Player2.m_otherPlayerBoard);
 
@@ -717,12 +717,14 @@ class Game {
                 alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                 Player2.hideShips(2)
                 Player1.showShips(2)
+                document.getElementById("bombtext").innerHTML = "You have "+ Player2.m_numBombs +" bomb(s) remaining";
             } else {
                 //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                 Player2.takeATurn(2, document.querySelector('#input').value)
                 alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                 Player1.hideShips(1)
                 Player2.showShips(1)
+                document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
             }
             i++
         })
