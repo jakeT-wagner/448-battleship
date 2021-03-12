@@ -591,7 +591,7 @@ class Player {
         while(tookATurn == false){
             if (isValidCode(choice)){
                 if (this.m_otherPlayerBoard.isAlreadyShot(choice)) {
-                    choice = window.prompt("What's your guess?: ")
+                    choice = window.prompt("Error! Enter new input: ")
                     choice = choice.toUpperCase()
                     tookATurn = false
                 } else {
@@ -621,7 +621,7 @@ class Player {
             }
             else {
                 window.alert("\nERROR: The coordinate you input was wrong. Try again!\n")
-                choice = window.prompt("What's your guess?: ")
+                choice = window.prompt("Error! Enter new input: ")
                 choice = choice.toUpperCase()
             }
         }
