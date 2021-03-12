@@ -569,16 +569,20 @@ class Player {
                       for(let j = -1; j<2; j++)
                       {
                         let modifiedChoice = [String.fromCharCode(mapper[choiceArray[0]]+97+i).toUpperCase(),parseInt(choiceArray[1],10)+j]
-                        if (this.m_otherPlayerBoard.isAHit(modifiedChoice.join(''), player))
+                        console.log(parseInt(mapper[choiceArray[0]],10)+i + ", " + modifiedChoice[1]);
+                        if (parseInt(mapper[choiceArray[0]],10)+i >= 0 && parseInt(mapper[choiceArray[0]],10)+i < 10 && modifiedChoice[1] > 0 && parseInt(choiceArray[1],10)+j <= 10)
                         {
-                          bombhit = true;
-                          let holder = this.checkFleet(modifiedChoice.join(''), player);
+                          if (this.m_otherPlayerBoard.isAHit(modifiedChoice.join(''), player))
+                          {
+                            bombhit = true;
+                            let holder = this.checkFleet(modifiedChoice.join(''), player);
 
-                          if(holder.isSunk()){
-                              //holder.sink(player);
-                              window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                            if(holder.isSunk()){
+                                //holder.sink(player);
+                                window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                            }
+
                           }
-
                         }
                       }
                     }
@@ -598,11 +602,11 @@ class Player {
                           this.checkFleet(choice, player)
                           tookATurn = true
                       }
+                      console.log("bomb fired");
+                      this.m_numBombs --;
+                      tookATurn = true;
 
                   }
-                  console.log("bomb fired");
-                  this.m_numBombs --;
-                  tookATurn = true;
                   //shoot a bomb if not already fired on that square
                 }
                 else{
