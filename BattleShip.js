@@ -568,13 +568,17 @@ class Player {
                     {
                       for(let j = -1; j<2; j++)
                       {
-                        console.log(choiceArray[0]);
-                        console.log(mapper[choiceArray[0]]);
-                        console.log(String.fromCharCode(mapper[choiceArray[0]]+97+i).toUpperCase() + " , " + parseInt(choiceArray[1],10)+j);
                         let modifiedChoice = [String.fromCharCode(mapper[choiceArray[0]]+97+i).toUpperCase(),parseInt(choiceArray[1],10)+j]
                         if (this.m_otherPlayerBoard.isAHit(modifiedChoice.join(''), player))
                         {
                           bombhit = true;
+                          let holder = this.checkFleet(modifiedChoice.join(''), player);
+
+                          if(holder.isSunk()){
+                              //holder.sink(player);
+                              window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
+                          }
+
                         }
                       }
                     }
@@ -582,12 +586,6 @@ class Player {
 
                           window.alert("\nIt was a hit!\n")
                           tookATurn = true
-                          let holder = this.checkFleet(choice, player);
-
-                          if(holder.isSunk()){
-                              //holder.sink(player);
-                              window.alert("Player '" + this.m_name + "' sank opponent's: " + holder.getSize() + " length ship!\n")
-                          }
 
                           if (this.m_otherPlayerBoard.checkIfAllHit()){
                               window.alert("\nCongratulations, " + this.m_name + "! You have sunk all your enemy's battleships! You won! Reload to play again!\n")
