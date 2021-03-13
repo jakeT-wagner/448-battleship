@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <title>BATTLESHIP PARADIGMS</title>
+    </head>
+    <body>
+        <div name="title=paradigm">
+            <h1>PARADIGMS</h1>
+            <h4>Paradims used: Object-Oriented Programming, Data-Structured Centered Design</h4>
+        </div>
+        <div name="paradigm-1">
+            <h2>PARADIGM: OBJECT-ORIENTED DESIGN</h2>
+            <ul>
+                <li>Classes: Gameboard, Ship, Player, Game</li>
+                <li>A game object is initially created. At the beginning of the game, inside the Game class, 2 Player objects are created and
+                    the attibtutes are initiallized based off of the users inputs. (If playing with an AI, only 1 Player object is created). Each Player
+                    object contains a Gameboard object (used to determine the state of each players attack) and an array of Ship objects (used to place
+                    a players ship). The Gameboard class uses the array of Ship objects to determine if an attack has hit or missed the other players ship.
+                </li>
+            </ul>
+        </div>
+        <div name="paradigm-2">
+            <h2>Data-Structured Centered Design</h2>
+            <ul>
+                <li>At the beginning of the game, the programs collects data from the user by asking the following: "Player1 what is your name?", "Play against an AI",
+                    (if playing with an AI) "What difficulty?", (If not playing with an AI) "Player2, what is your name?". With this data, the program is able to
+                    create a game with either 2 players or 1 player and an AI at a set difficulty. The programs control structure is based off the data. 
+                </li>
+            </ul>
+        </div>
+    </body>
+    <script type="text/javascript" src="BattleShip.js"></script>
+</html>
