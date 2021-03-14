@@ -781,7 +781,7 @@
 
 
 <div class="description">
-    allows other player to place ships, I.E. player1's board is in player2's class, this is where ships are created, also adds to fleet array
+    allows other player, and AI to place ships, I.E. player1's board is in player2's class, this is where ships are created, also adds to fleet array
 </div>
 
 
@@ -817,7 +817,7 @@
 
         <tr>
             
-                <td class="name"><code>player</code></td>
+                <td class="name"><code>player, is_ai, otherPlayerName</code></td>
             
 
             <td class="type">
@@ -1222,6 +1222,451 @@
 <div class="param-desc">
     returns a message that is then displayed to the player, message says what there hit was and if they have won that is also printed out
 </div>
+
+<h4 class="name" id="hardAIMove"><span class="type-signature"></span>hardAIMove<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Method that fires wherever the players ships are as based off the hardAI logic.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line512">line 512</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns coordinate that is selected by this method based off of where the player's ships are. 
+</div>
+
+<h4 class="name" id="MediumAIMove"><span class="type-signature"></span>MediumAIMove<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Method that fires as based off the mediumAI logic which searches orthagonally after randomly firing and hitting a ship.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line504">line 504</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns coordinate that is selected by this method based off of randomly firing then searching orthagonally for ships. 
+</div>
+
+
+
+
+<h4 class="name" id="easyAIMove"><span class="type-signature"></span>easyAIMove<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Method that fires at coordinates randomly.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line482">line 482</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns coordinate that is selected by this method based off of randomly firing
+</div>
+
+
+
+
+
+
+<h4 class="name" id="isBomb"><span class="type-signature"></span>isBomb<span class="signature">(code)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    returns true or false based on input format. Returns true if there is a "b" at the end of the string
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>code</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">string that is checked by the method for a "B"</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+<h4 class="name" id="AITurn"><span class="type-signature"></span>AITurn<span class="signature">(player)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    takes a starting postions
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>player</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">based off of user selection, this method coordinates which AI will play against the player.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BattleShip.js.html">BattleShip.js</a>, <a href="BattleShip.js.html#line461">line 461</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
 

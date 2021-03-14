@@ -501,8 +501,7 @@ class Player {
      * @description returns medium AI moves
      * @param None
      */
-    mediumAIMove(){
-        return "B5"
+    mediumAIMove(){   
     }
 
     /**
