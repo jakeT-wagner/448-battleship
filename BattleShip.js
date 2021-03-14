@@ -17,7 +17,11 @@ function isValidCode(code){
   return ((/^[A-J]\d+$/.test(code)) && less10);
 }
 
-
+/**
+     * @description checks input format
+     * @returns true if there is a b at the end of the string
+     * @param {string} code the input given by user
+*/
 function isBomb(code)
 {
   code = code.toString();
@@ -29,6 +33,7 @@ function isBomb(code)
     return false;
   }
 }
+
 /**
  *  @description mapper to handle cols
  */
@@ -481,7 +486,7 @@ class Player {
         let col;
         while(shotTaken == false){
             //gives a random coordinate for the ship to shoot at
-            row = Math.floor(Math.random() * 10);
+            row = Math.ceil(Math.random() * 10);
             col = 65 + Math.floor(Math.random() * 10);
             let coordinate = String.fromCharCode(col)
             coordinate = coordinate + row.toString()
@@ -840,68 +845,42 @@ class Game {
                     Player2.showShips(1)
                 }
                 i++
+            }
+        })
+        
+        document.getElementById("input").addEventListener('click', () => {
+            window.addEventListener('keypress', (event) => {
+                if (event.key == 'Enter') {
+                    if (is_ai != 0) {
+                        Player1.takeATurn(1, document.querySelector("#input").value)
+                        Player2.AITurn(2)
+                        document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
+                        //player 1 takes turn, followed by automatic move by AI
+                    }
+                    else { 
+                        if(i%2 == 1) {
+                            //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                            Player1.takeATurn(1, document.querySelector('#input').value);
+                            alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+                            Player2.hideShips(2)
+                            Player1.showShips(2)
+                        } else {
+                            //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+                            Player2.takeATurn(2, document.querySelector('#input').value)
+                            alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+                            Player1.hideShips(1)
+                            Player2.showShips(1)
+                        }
+                        i++
+                    }
+                }
             })
         })
         
 
-        // document.getElementById("confirmInput").addEventListener('click' , function() {
-        //     if (is_ai != 0) {
-        //         Player1.takeATurn(1, document.querySelector("#input").value)
-        //         Player2.AITurn(2)
-        //         document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
-        //         //player 1 takes turn, followed by automatic move by AI
-        //     }
-        //     else { 
-        //         if(i%2 == 1) {
-        //             //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
-        //             console.log("input = " + document.querySelector('#input').value)
-        //             Player1.takeATurn(1, document.querySelector('#input').value);
-        //             alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
-        //             Player2.hideShips(2)
-        //             Player1.showShips(2)
-        //             document.getElementById("bombtext").innerHTML = "You have "+ Player2.m_numBombs +" bomb(s) remaining";
-        //         } else {
-        //             //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
-        //             Player2.takeATurn(2, document.querySelector('#input').value)
-        //             alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
-        //             Player1.hideShips(1)
-        //             Player2.showShips(1)
-        //             document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
-        //         }
-        //         i++
-        //     }
-        // })
-
     }
 }
 
-function gameLoop() {
-        if (is_ai != 0) {
-            Player1.takeATurn(1, document.querySelector("#input").value)
-            Player2.AITurn(2)
-            document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
-            //player 1 takes turn, followed by automatic move by AI
-        }
-        else { 
-            if(i%2 == 1) {
-                //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
-                console.log("input = " + document.querySelector('#input').value)
-                Player1.takeATurn(1, document.querySelector('#input').value);
-                alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
-                Player2.hideShips(2)
-                Player1.showShips(2)
-                document.getElementById("bombtext").innerHTML = "You have "+ Player2.m_numBombs +" bomb(s) remaining";
-            } else {
-                //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
-                Player2.takeATurn(2, document.querySelector('#input').value)
-                alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
-                Player1.hideShips(1)
-                Player2.showShips(1)
-                document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
-            }
-            i++
-        }
-}
 
 /**
  * @description event listener callback that makes sure the page is loaded before the game starts
