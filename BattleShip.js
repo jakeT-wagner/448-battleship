@@ -828,24 +828,49 @@ class Game {
             else { 
                 if(i%2 == 1) {
                     //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
-                    console.log("input = " + document.querySelector('#input').value)
                     Player1.takeATurn(1, document.querySelector('#input').value);
                     alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.hideShips(2)
                     Player1.showShips(2)
-                    document.getElementById("bombtext").innerHTML = "You have "+ Player2.m_numBombs +" bomb(s) remaining";
                 } else {
                     //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
                     Player2.takeATurn(2, document.querySelector('#input').value)
                     alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
                     Player1.hideShips(1)
                     Player2.showShips(1)
-                    document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
                 }
                 i++
-            }
+            })
         })
         
+
+        // document.getElementById("confirmInput").addEventListener('click' , function() {
+        //     if (is_ai != 0) {
+        //         Player1.takeATurn(1, document.querySelector("#input").value)
+        //         Player2.AITurn(2)
+        //         document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
+        //         //player 1 takes turn, followed by automatic move by AI
+        //     }
+        //     else { 
+        //         if(i%2 == 1) {
+        //             //window.alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+        //             console.log("input = " + document.querySelector('#input').value)
+        //             Player1.takeATurn(1, document.querySelector('#input').value);
+        //             alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+        //             Player2.hideShips(2)
+        //             Player1.showShips(2)
+        //             document.getElementById("bombtext").innerHTML = "You have "+ Player2.m_numBombs +" bomb(s) remaining";
+        //         } else {
+        //             //window.alert("\nIt is " + Player2.m_name + "'s turn! Don't look " + Player1.m_name)
+        //             Player2.takeATurn(2, document.querySelector('#input').value)
+        //             alert("\nIt is " + Player1.m_name + "'s turn! Don't look " + Player2.m_name)
+        //             Player1.hideShips(1)
+        //             Player2.showShips(1)
+        //             document.getElementById("bombtext").innerHTML = "You have "+ Player1.m_numBombs +" bomb(s) remaining";
+        //         }
+        //         i++
+        //     }
+        // })
 
     }
 }
