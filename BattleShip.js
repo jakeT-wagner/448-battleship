@@ -576,12 +576,12 @@ class Player {
 
 
 
-                let coordinate = String.fromCharCode(col)
+                let coordinate = String.fromCharCode(col+65)
                 coordinate = coordinate + (row+1).toString() //changes from 0-9 to 1-10
                 
                 if (!this.m_otherPlayerBoard.isAlreadyShot(coordinate)) { 
 
-                    if(this.m_otherPlayerBoard.m_testBoard[row][col] === 'S') { //[0-9][A-j]
+                    //if(this.m_otherPlayerBoard.m_testBoard[row][col] === 'S') { //[0-9][A-j]
 
                         /*
                         let ship = this.checkFleet(coordinate, 2);
@@ -597,7 +597,7 @@ class Player {
                             }
                         */
                             
-                            if(row == this.m_prev_hit[0])
+                      /*      if(row == this.m_prev_hit[0])
                             {
                                 if (col > this.m_prev_hit[1])
                                 {
@@ -624,10 +624,12 @@ class Player {
                                     this.m_next_hit.unshift((row - 1, col))
                                 }
 
-                            }
+                            } */ 
+                            this.m_next_hit.shift();
                             this.m_prev_hit = [row, col];
                             return coordinate;
-                        }
+                       // }
+                        
                     
                     }
                     this.m_next_hit.shift();
@@ -772,6 +774,8 @@ class Player {
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
+            console.log("The next shot from AI is: ")
+            console.log(choice);
             if (isValidCode(choice)){
               if(isBomb(choice)){
                 console.log("bomb amount = " + this.m_numBombs);
