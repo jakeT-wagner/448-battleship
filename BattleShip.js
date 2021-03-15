@@ -119,15 +119,15 @@ class Gameboard {
         {
           coord = coord.substring(0, coord.length-1);
         }
-        let arr = coord.split(coord[0]) //no spaces needed for coordinate
-        const row = coord[0];
-        const colNum = Number(arr[1]) - 1;
+        let arr = coord.split(coord[0]) //no spaces needed for coordinate [A, 2] A-J 1-10
+        const row = coord[0]; //LETTER
+        const colNum = Number(arr[1]) - 1; //NUMBER 0-9
 
         if(!this.checkOutOfBound(ship, coord, orientation)){
           for (let i = 0; i < ship.getSize(); i++){
             // whether a ship is already there on the coord
             if (orientation === 'V' || orientation === 'v') { //I changed vertical to 'V' or 'v' in other function
-              if(this.m_testBoard[colNum + i][Number(mapper[row])] === 'S'){
+              if(this.m_testBoard[colNum + i][Number(mapper[row])] === 'S'){ //COL = number which is row , ROW = letter 
                 window.alert("Invalid ship placement: Overlap")
                 return false
               }
@@ -323,7 +323,7 @@ class Ship{
 
         for (let i = 0; i < this.m_size; i++) {
             if(this.m_body[i] === marked) {
-                this.m_body[i] = 'X';
+               // this.m_body[i] = 'X';
                 this.m_health--;
                 console.log(this.m_body);
                 if(player == 1) {
@@ -427,6 +427,8 @@ class Player {
         console.log("bomb amount = " + this.m_numBombs);
         this.m_otherPlayerBoard = new Gameboard(this.m_numShips)
         this.m_fleet = new Array(this.m_numShips) //holds all the created ships
+        this.m_next_hit = new Array(); // used for medium ai, stores next hit 
+        this.m_prev_hit = new Array(); //used to store previous hit for medium ai
     }
 
      /**
@@ -442,7 +444,7 @@ class Player {
                 return this.m_fleet[i];
             }
         }
-        //this.m_fleet[i].hit(coord, player);
+        //this.m_fleet[i].hit(coord, player); 
     }
 
 
@@ -502,7 +504,143 @@ class Player {
      * @param None
      */
     mediumAIMove(){   
-    }
+
+        let shotTaken = false;
+
+        if (this.m_next_hit.length == 0) {
+
+            console.log("empty next hit")
+
+            //will randomly shoot, verifying if that spot has not been hit before
+        
+        let row;
+        let col;
+        while(shotTaken == false){
+            //gives a random coordinate for the ship to shoot at
+            
+            col = Math.floor(Math.random() * 10); //number 0-9 corresponds to letter
+            row = Math.ceil(Math.random() * 10); //Number 1-10
+            let coordinate = String.fromCharCode(65 + col) //Char A-J
+            coordinate = coordinate + row.toString() //[A-J][1-10]
+            console.log(coordinate)
+            
+            
+            if(!this.m_otherPlayerBoard.isAlreadyShot(coordinate)){ //NOT SHOT
+
+                //console.log(this.m_otherPlayerBoard.m_testBoard[row][col]);
+
+                if(this.m_otherPlayerBoard.m_testBoard[row-1][col] === 'S'){ //number, letter
+
+                    //let ship = this.checkFleet(coordinate, 2); //returns a ship IF it includes the coordinate
+                                                               //ship.check_coordinate returns true if the Ship array contains the coordinate
+                                                               //ship.hit reduces the health of ship by one
+                    //console.log(ship)
+                    //if(ship.isSunk()){
+                    //}
+                    /*
+                    else{
+                    */
+                    row = row -1;
+                    for(let i = -1; i <= 1; i++){
+                        if(i != 0){
+                            if((row + i) >= 0 && (row + i) <= 9)
+                            {
+                                this.m_next_hit.push([row + i, col])
+                            }
+                            if((col + i) >= 0 && (col + i) <= 9)
+                            {
+                                this.m_next_hit.push([row, col + i])
+                            }
+                        }
+                    }
+                    
+                
+                }
+
+            }
+            this.m_prev_hit = [row, col];
+                return coordinate;
+            }
+              
+        }
+
+        else {
+            console.log("not empty next hit")
+            console.log(this.m_next_hit);
+            while(shotTaken == false){
+  
+                console.log(this.m_next_hit);
+                console.log(this.m_next_hit[0]);
+                let row = this.m_next_hit[0][0];
+                let col = this.m_next_hit[0][1];
+
+
+
+                let coordinate = String.fromCharCode(col+65)
+                coordinate = coordinate + (row+1).toString() //changes from 0-9 to 1-10
+                
+                if (!this.m_otherPlayerBoard.isAlreadyShot(coordinate)) { 
+
+                    //if(this.m_otherPlayerBoard.m_testBoard[row][col] === 'S') { //[0-9][A-j]
+
+                        /*
+                        let ship = this.checkFleet(coordinate, 2);
+
+                        console.log(ship);
+
+                        if(typeof(ship) != "undefined"){
+
+                            if(ship.isSunk()){
+                                
+                
+                                this.m_next_hit = [];
+                            }
+                        */
+                            
+                      /*      if(row == this.m_prev_hit[0])
+                            {
+                                if (col > this.m_prev_hit[1])
+                                {
+                                    this.m_next_hit.shift();
+                                    this.m_next_hit.unshift([row, col + 1])
+                                }
+                                else 
+                                {
+                                    this.m_next_hit.shift();
+                                    this.m_next_hit.unshift([row, col - 1])
+                                }
+                            }
+
+                            else if (col == this.m_prev_hit[1])
+                            {
+                                if(row > this.m_prev_hit[0])
+                                {
+                                    this.m_next_hit.shift();
+                                    this.m_next_hit.unshift((row + 1, col))
+                                }
+                                else
+                                {
+                                    this.m_next_hit.shift();
+                                    this.m_next_hit.unshift((row - 1, col))
+                                }
+
+                            } */ 
+                            this.m_next_hit.shift();
+                            this.m_prev_hit = [row, col];
+                            return coordinate;
+                       // }
+                        
+                    
+                    }
+                    this.m_next_hit.shift();
+
+                    if(this.m_next_hit.length == 0) {
+                        this.mediumAIMove();
+                    }
+                }
+
+            }
+    }   
 
     /**
      * @description returns hard AI moves
@@ -636,6 +774,8 @@ class Player {
         choice = choice.toUpperCase();
         let tookATurn = false
         while(tookATurn == false){
+            console.log("The next shot from AI is: ")
+            console.log(choice);
             if (isValidCode(choice)){
               if(isBomb(choice)){
                 console.log("bomb amount = " + this.m_numBombs);
@@ -718,6 +858,7 @@ class Player {
                         window.alert("\n" + this.m_name +  " got a hit!\n")
                         tookATurn = true
                         let holder = this.checkFleet(choice, player);
+                        console.log(holder);
 
                         if(holder.isSunk()){
                             //holder.sink(player);
